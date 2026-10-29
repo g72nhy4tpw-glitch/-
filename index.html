@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>小六壬 · 指算</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: linear-gradient(145deg, #2b2420 0%, #1a1410 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 12px;
+      color: #e8ddcc;
+    }
+    .app {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(40, 34, 28, 0.92);
+      border-radius: 36px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      padding: 22px 18px 26px;
+      border: 1px solid rgba(200, 170, 120, 0.25);
+    }
+    h1 {
+      text-align: center;
+      font-size: clamp(1.8rem, 7vw, 2.2rem);
+      font-weight: 400;
+      letter-spacing: 6px;
+      color: #d9c9a5;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 10px rgba(220, 180, 100, 0.4);
+    }
+    .sub {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #a89880;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      border-top: 1px solid rgba(200, 170, 110, 0.25);
+      padding-top: 6px;
+      display: inline-block;
+      width: 100%;
+    }
+    .inputs {
+      background: rgba(20, 16, 12, 0.6);
+      border-radius: 24px;
+      padding: 16px 14px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(190, 160, 110, 0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .item { flex: 1 1 130px; min-width: 110px; }
+    .item label {
+      display: block;
+      font-size: 0.78rem;
+      color: #b8a88a;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+    .item select {
+      width: 100%;
+      padding: 12px 10px;
+      border-radius: 40px;
+      border: 1px solid rgba(200, 170, 120, 0.3);
+      background: rgba(30, 24, 18, 0.8);
+      color: #f0e6d2;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .btn {
+      width: 100%;
+      padding: 16px 10px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #d4b06a 0%, #b8934a 100%);
+      border: none;
+      color: #1f1a14;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 4px;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #6d5a38, 0 10px 18px rgba(0, 0, 0, 0.5);
+      margin-bottom: 16px;
+      display: block;
+      text-align: center;
+      border: 1px solid rgba(255, 240, 200, 0.4);
+    }
+    .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #6d5a38, 0 8px 14px rgba(0, 0, 0, 0.4); }
+    .result {
+      background: rgba(18, 14, 10, 0.8);
+      border-radius: 32px;
+      padding: 22px 16px;
+      border: 1px solid rgba(210, 180, 120, 0.35);
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5), 0 6px 14px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .result .symbol {
+      font-size: clamp(3.5rem, 16vw, 5rem);
+      line-height: 1.2;
+      margin-bottom: 8px;
+      letter-spacing: 6px;
+      text-shadow: 0 0 24px rgba(230, 200, 120, 0.6);
+    }
+    .result .name { font-size: 1.8rem; font-weight: 500; color: #cfc19b; letter-spacing: 3px; margin-bottom: 8px; }
+    .result .attr { font-size: 0.85rem; color: #b0a890; margin-bottom: 6px; }
+    .result .tag {
+      display: inline-block;
+      background: rgba(200, 170, 100, 0.18);
+      border: 1px solid rgba(200, 170, 100, 0.35);
+      border-radius: 20px;
+      padding: 2px 12px;
+      font-size: 0.82rem;
+      color: #e0c880;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .result .steps {
+      font-size: 0.72rem;
+      color: #8a7e6a;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(180, 150, 100, 0.3);
+      width: 100%;
+      line-height: 1.7;
+      text-align: left;
+      letter-spacing: 0.3px;
+    }
+    .result .steps span { color: #d4b06a; font-weight: 500; }
+    .placeholder { color: #8a7e6a; font-size: 0.95rem; line-height: 1.8; }
+    .placeholder .big { font-size: 2.4rem; display: block; margin-bottom: 10px; opacity: 0.6; }
+    @media (max-width: 380px) {
+      .app { padding: 16px 12px 20px; }
+      .item { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>小六壬</h1>
+    <div class="sub">指 算 · 掐 指</div>
+
+    <div class="inputs">
+      <div class="item">
+        <label>农历月份</label>
+        <select id="monthSelect">
+          <option value="1">1 月</option>
+          <option value="2">2 月</option>
+          <option value="3">3 月</option>
+          <option value="4">4 月</option>
+          <option value="5">5 月</option>
+          <option value="6">6 月</option>
+          <option value="7">7 月</option>
+          <option value="8">8 月</option>
+          <option value="9">9 月</option>
+          <option value="10">10 月</option>
+          <option value="11">11 月</option>
+          <option value="12">12 月</option>
+        </select>
+      </div>
+      <div class="item">
+        <label>农历日期</label>
+        <select id="daySelect">
+          <option value="1">1 日</option>
+          <option value="2">2 日</option>
+          <option value="3">3 日</option>
+          <option value="4">4 日</option>
+          <option value="5">5 日</option>
+          <option value="6">6 日</option>
+          <option value="7">7 日</option>
+          <option value="8">8 日</option>
+          <option value="9">9 日</option>
+          <option value="10">10 日</option>
+          <option value="11">11 日</option>
+          <option value="12">12 日</option>
+          <option value="13">13 日</option>
+          <option value="14">14 日</option>
+          <option value="15">15 日</option>
+          <option value="16">16 日</option>
+          <option value="17">17 日</option>
+          <option value="18">18 日</option>
+          <option value="19">19 日</option>
+          <option value="20">20 日</option>
+          <option value="21">21 日</option>
+          <option value="22">22 日</option>
+          <option value="23">23 日</option>
+          <option value="24">24 日</option>
+          <option value="25">25 日</option>
+          <option value="26">26 日</option>
+          <option value="27">27 日</option>
+          <option value="28">28 日</option>
+          <option value="29">29 日</option>
+          <option value="30">30 日</option>
+          <option value="31">31 日</option>
+        </select>
+      </div>
+      <div class="item">
+        <label>时辰</label>
+        <select id="hourSelect">
+          <option value="1">子时 (23-1点)</option>
+          <option value="2">丑时 (1-3点)</option>
+          <option value="3">寅时 (3-5点)</option>
+          <option value="4">卯时 (5-7点)</option>
+          <option value="5">辰时 (7-9点)</option>
+          <option value="6">巳时 (9-11点)</option>
+          <option value="7">午时 (11-13点)</option>
+          <option value="8">未时 (13-15点)</option>
+          <option value="9">申时 (15-17点)</option>
+          <option value="10">酉时 (17-19点)</option>
+          <option value="11">戌时 (19-21点)</option>
+          <option value="12">亥时 (21-23点)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn" id="calcBtn">开始掐算</button>
+
+    <div class="result" id="resultBox">
+      <div class="placeholder">
+        <span class="big">☯</span>
+        请选择农历月份、日期与时辰<br>然后点击「开始掐算」
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var PALACES = [
+        { name: '大安', symbol: '䷀', attr: '身不动时，五行属木，青龙，谋事主一、五、七。', result: '事情在一个星期左右有眉目。', color: '#7ebc8a' },
+        { name: '留连', symbol: '䷁', attr: '卒未归时，五行属水，玄武，谋事主二、八、十。', result: '下次这件事有转机，需要再一次。', color: '#6a9ec0' },
+        { name: '速喜', symbol: '䷂', attr: '人便至时，五行属火，朱雀，谋事主三、六、九。', result: '立刻有好消息，但是需要注意沟通。', color: '#d48a6a' },
+        { name: '赤口', symbol: '䷃', attr: '官事凶时，五行属金，白虎，谋事主四、七、十。', result: '有争吵纠纷，宜谨慎言行。', color: '#c05a5a' },
+        { name: '小吉', symbol: '䷄', attr: '人来喜时，五行属木，六合，谋事主一、五、七。', result: '事情在两个礼拜左右有眉目。', color: '#b8a06a' },
+        { name: '空亡', symbol: '䷅', attr: '音信稀时，五行属土，勾陈，谋事主三、六、九。', result: '此刻不需要想，没希望，需要重头开始。', color: '#8a7a6a' }
+      ];
+      var SHICHEN = ['子时','丑时','寅时','卯时','辰时','巳时','午时','未时','申时','酉时','戌时','亥时'];
+
+      var monthSel = document.getElementById('monthSelect');
+      var daySel = document.getElementById('daySelect');
+      var hourSel = document.getElementById('hourSelect');
+      var calcBtn = document.getElementById('calcBtn');
+      var resultBox = document.getElementById('resultBox');
+
+      function moveFrom(start, count) {
+        var pos = start;
+        for (var i = 1; i < count; i++) pos = (pos + 1) % 6;
+        return pos;
+      }
+
+      function calc() {
+        var month = parseInt(monthSel.value, 10);
+        var day = parseInt(daySel.value, 10);
+        var hour = parseInt(hourSel.value, 10);
+
+        var posM = moveFrom(0, month);
+        var posD = moveFrom(posM, day);
+        var posH = moveFrom(posD, hour);
+
+        var palace = PALACES[posH];
+
+        resultBox.innerHTML =
+          '<div class="symbol" style="color:' + palace.color + '">' + palace.symbol + '</div>' +
+          '<div class="name">' + palace.name + '</div>' +
+          '<div class="attr">' + palace.attr + '</div>' +
+          '<span class="tag">' + palace.result + '</span>' +
+          '<div class="steps">' +
+            '月(<span>' + month + '</span>) → 落 <span>' + PALACES[posM].name + '</span> ｜ ' +
+            '日(<span>' + day + '</span>) → 落 <span>' + PALACES[posD].name + '</span> ｜ ' +
+            SHICHEN[hour-1] + '(<span>' + hour + '</span>) → 落 <span>' + palace.name + '</span>' +
+          '</div>';
+      }
+
+      calcBtn.onclick = calc;
+    })();
+  </script>
+</body>
+</html>
